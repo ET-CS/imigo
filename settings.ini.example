@@ -5,6 +5,7 @@ debug=True
 
 [UI]
 rtl=False
+lang=en
 
 [Library]
 path=/path/to/imigo/library

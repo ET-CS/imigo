@@ -53,5 +53,8 @@ docs/_build/
 # PyBuilder
 target/
 
+# Backup files
+*.~
+
 # settings
 settings.ini

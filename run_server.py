@@ -1,8 +1,12 @@
 #!/usr/bin/env python
 from flask import Flask, render_template
-app = Flask(__name__)
-import ConfigParser
+from flask.ext.babel import Babel, gettext, ngettext
 
+app = Flask(__name__)
+#app.config.from_pyfile('mysettings.cfg')
+babel = Babel(app)
+
+import ConfigParser
 def ConfigSectionMap(section):
     dict1 = {}
     options = Config.options(section)
@@ -22,6 +26,8 @@ _port = ConfigSectionMap("Server")['port']
 _host = ConfigSectionMap("Server")['host']
 _debug = ConfigSectionMap("Server")['debug']=="True"
 _rtl = ConfigSectionMap("UI")['rtl']=="True"
+app.config['BABEL_DEFAULT_LOCALE'] = ConfigSectionMap("UI")['lang']
+from flask.ext.babel import refresh; refresh()
 
 @app.route("/")
 def index():
@@ -29,6 +35,7 @@ def index():
 
 @app.context_processor
 def inject_user():
+    #, home=gettext(u'Home')
     return dict(rtl=_rtl)
     
 if __name__ == "__main__":
