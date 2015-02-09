@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from flask import Flask
+from flask import Flask, render_template
 app = Flask(__name__)
 import ConfigParser
 
@@ -23,8 +23,8 @@ _host = ConfigSectionMap("Server")['host']
 _debug = ConfigSectionMap("Server")['debug']=="True"
 
 @app.route("/")
-def hello():
-    return "Hello World!"
+def index():
+    return render_template('index.html')
     
 if __name__ == "__main__":
     app.run(host=_host, port=int(_port), debug=_debug)
