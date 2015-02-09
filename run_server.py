@@ -26,6 +26,11 @@ _port = ConfigSectionMap("Server")['port']
 _host = ConfigSectionMap("Server")['host']
 _debug = ConfigSectionMap("Server")['debug']=="True"
 _rtl = ConfigSectionMap("UI")['rtl']=="True"
+_header_background = ConfigSectionMap("UI")['header-background']
+_header_logo = ConfigSectionMap("UI")['header-logo']
+_header_logo_href = ConfigSectionMap("UI")['header-logo-href']
+_footer_url = ConfigSectionMap("Copyright")['url']
+_footer_year = ConfigSectionMap("Copyright")['year']
 app.config['BABEL_DEFAULT_LOCALE'] = ConfigSectionMap("UI")['lang']
 from flask.ext.babel import refresh; refresh()
 
@@ -36,7 +41,14 @@ def index():
 @app.context_processor
 def inject_user():
     #, home=gettext(u'Home')
-    return dict(rtl=_rtl)
+    return dict(
+	rtl=_rtl,
+	hbg=_header_background,
+	hlogo=_header_logo,
+	hlogohref=_header_logo_href,
+	footer_url=_footer_url,
+	footer_year=_footer_year
+    )
     
 if __name__ == "__main__":
     app.run(host=_host, port=int(_port), debug=_debug)

@@ -6,6 +6,13 @@ debug=True
 [UI]
 rtl=False
 lang=en
+header-background=header.png
+header-logo=logo.png
+header-logo-href=/
+
+[Copyright]
+url=http://example.com/
+year=2015
 
 [Library]
 path=/path/to/imigo/library

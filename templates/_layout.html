@@ -9,13 +9,13 @@
 	    }
 	    header {
 		background-color: grey;
-		background-image: url("{{ url_for('static', filename='header.png') }}");
+		background-image: url("{{ url_for('static', filename=hbg) }}");
 		width: 100%;
 		height: 150px;
 		background-size: 100%;
 	    }
 	    .logo {
-		background-image: url("{{ url_for('static', filename='logo.png') }}");
+		background-image: url("{{ url_for('static', filename=hlogo) }}");
 		width: 100px;
 		height: 100px;
 		background-size: 100%;
@@ -24,6 +24,9 @@
 	    .content {
 		padding: 40px 15px;
 	        text-align: center;
+	    }
+	    footer {
+		margin-top: 25px;
 	    }
 	</style>
     {% endblock %}
@@ -41,7 +44,7 @@
 <body>
     <header>
 	<div class="container">
-	    <div class="logo"></div>
+	    <a href="{{ hlogohref }}"><div class="logo"></div></a>
 	</div>
     </header>
     <nav class="navbar navbar-inverse">
@@ -53,20 +56,24 @@
             	    <span class="icon-bar"></span>
             	    <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="">imigo</a>
+                <a class="navbar-brand" href="/">imigo</a>
             </div>
             <div id="navbar" class="collapse navbar-collapse">
         	<ul class="nav navbar-nav">
-        	    <li class="active"><a href="">{% trans %}Home{% endtrans %}</a></li>
+        	    <li class="active"><a href="/">{% trans %}Home{% endtrans %}</a></li>
         	</ul>
     	    </div><!--/.nav-collapse -->
 	</div>
     </nav>
     <div class="container">
 	<div id="content">{% block content %}{% endblock %}</div>
+        <footer>
+	{% block footer %}
+        	&copy; {% trans %}Copyright{% endtrans %} {{ footer_year }}, <a href="{{ footer_url }}">{% trans %}me{% endtrans %}</a>.
+	{% endblock %}
+	</footer>
     </div>
-    {% block footer %}
-    {% endblock %}
+
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>

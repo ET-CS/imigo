@@ -13,3 +13,5 @@ $ pybabel compile -d translations
 ```
 
 make your settings.ini from settings.ini.example
+
+edit `your_name` in translations (en at least)
