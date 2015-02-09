@@ -21,10 +21,15 @@ Config.read("settings.ini")
 _port = ConfigSectionMap("Server")['port']
 _host = ConfigSectionMap("Server")['host']
 _debug = ConfigSectionMap("Server")['debug']=="True"
+_rtl = ConfigSectionMap("UI")['rtl']=="True"
 
 @app.route("/")
 def index():
     return render_template('index.html')
+
+@app.context_processor
+def inject_user():
+    return dict(rtl=_rtl)
     
 if __name__ == "__main__":
     app.run(host=_host, port=int(_port), debug=_debug)
