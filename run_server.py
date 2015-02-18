@@ -1,5 +1,10 @@
 #!/usr/bin/env python
-from flask import Flask, render_template
+import os
+from os import listdir
+import glob
+import ntpath
+
+from flask import Flask, render_template, request
 from flask.ext.babel import Babel, gettext, ngettext
 
 app = Flask(__name__)
@@ -34,9 +39,54 @@ _footer_year = ConfigSectionMap("Copyright")['year']
 app.config['BABEL_DEFAULT_LOCALE'] = ConfigSectionMap("UI")['lang']
 from flask.ext.babel import refresh; refresh()
 
+apppath = os.path.dirname(os.path.abspath(__file__))
+library = apppath +'/static/library/'
+
 @app.route("/")
 def index():
-    return render_template('index.html')
+    item = request.args.get('item', '')
+    return get_folder(item)
+
+def get_folder(subfolder=''):
+    item = library + subfolder 
+    if os.path.isfile(item):
+	path = ntpath.basename(subfolder)
+	path = library+subfolder.replace(path, "")[1:] + '*.jpg'
+	rpath = '/static/library/'+subfolder.replace(path, "")[1:] + '*.jpg'
+	others = []
+	for g in glob.glob(path):
+	    item = {}
+	    item['name'] = ntpath.basename(g)
+	    item['url']='/'+g.replace(library, '')
+	    item['full']=g.replace(apppath, '')
+	    item['thumb']=item['full'].replace(".jpg", ".thumb.png")
+	    others.append(item)
+	others = sorted(others, key=lambda item: item['name'])
+	return render_template('item.html', item=subfolder, others=others)
+    folder = item + '/'
+    lib = []
+    for f in listdir(folder):
+	if not (f=='README.md' or f=='.gitignore' or f=='create_thumbs.sh' or f.endswith('.thumb.png')):
+	    item = {}
+	    item['name'] = f
+	    item['rname'] = subfolder +'/' + f
+	    if os.path.isfile(folder+f):
+		item['path'] = subfolder + '/' + f
+		item['path'] = item['path'].replace('.jpg', '.thumb.png')
+	    if os.path.isdir(folder+f):
+		for name in glob.glob(folder+f+'/*.thumb.png'):
+		    item['thumb'] = ntpath.basename(name)
+		    item['path'] = subfolder + f + '/' + item['thumb']
+		    break
+		if not 'path' in item:
+		    for name in glob.glob(folder+f+'/*.jpg'):
+			item['thumb'] = ntpath.basename(name)
+			item['path'] = subfolder + f + '/' + item['thumb']
+		        break
+	    lib.append(item)
+    # sort
+    lib = sorted(lib, key=lambda item: item['name'])
+    return render_template('index.html', folder=lib)
 
 @app.context_processor
 def inject_user():
