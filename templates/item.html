@@ -11,7 +11,7 @@
         $(".full").elevateZoom({
     	    zoomType: "lens",
     	    lensShape: "round",
-    	    lensSize: 400,
+    	    lensSize: 250,
     	    scrollZoom: true,
         });
         $(document).ready(function() {
@@ -27,9 +27,6 @@
 {% block head %}
     {{ super() }}
     <style type="text/css">
-    .container {
-	margin-top: 15px;
-    }
     h2 {
 	font-size: 1.5em!important;
 	text-align: center;
@@ -54,6 +51,9 @@
 	background-repeat: no-repeat;
 	background-size: contain;
     }
+    .owl-carousel .activeitem {
+	border: 2px solid black;
+    }
     </style>
 {% endblock %}
 
@@ -62,7 +62,7 @@
     <p><img class="full" src="{{ url_for('static', filename='library'+item) }}"/></a></p>
     <div style="direction:ltr;" id="carousel" class="owl-carousel">
 	{% for item in others %}
-	    <div class="item"><a href="{{ url_for('index', item=item['url']) }}"><div style='background-image: url("{{ item['thumb'] }}");' alt="None"/></div></a></div>
+	    <div class="item {% if item['active'] %}activeitem{% endif %}"><a href="{{ url_for('index', item=item['url']) }}"><div style='background-image: url("{{ item['thumb'] }}");' alt="None"/></div></a></div>
 	{% endfor %}
     </div>
 {% endblock %}

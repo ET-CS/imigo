@@ -55,31 +55,35 @@ def get_folder(subfolder=''):
 	rpath = '/static/library/'+subfolder.replace(path, "")[1:] + '*.jpg'
 	others = []
 	for g in glob.glob(path):
-	    item = {}
-	    item['name'] = ntpath.basename(g)
-	    item['url']='/'+g.replace(library, '')
-	    item['full']=g.replace(apppath, '')
-	    item['thumb']=item['full'].replace(".jpg", ".thumb.png")
-	    others.append(item)
+	    if not g.endswith('.thumb.jpg'):
+		item = {}
+		fn = ntpath.basename(g)
+		if fn==ntpath.basename(subfolder):
+		    item['active'] = True
+		item['name'] = fn
+		item['url']='/'+g.replace(library, '')
+		item['full']=g.replace(apppath, '')
+		item['thumb']=item['full'].replace(".jpg", ".thumb.jpg")
+		others.append(item)
 	others = sorted(others, key=lambda item: item['name'])
 	return render_template('item.html', item=subfolder, others=others)
     folder = item + '/'
     lib = []
     for f in listdir(folder):
-	if not (f=='README.md' or f=='.gitignore' or f=='create_thumbs.sh' or f.endswith('.thumb.png')):
+	if not (f=='README.md' or f=='.gitignore' or f=='create_thumbs.sh' or f.endswith('.thumb.jpg')):
 	    item = {}
 	    item['name'] = f
 	    item['rname'] = subfolder +'/' + f
 	    if os.path.isfile(folder+f):
 		item['path'] = subfolder + '/' + f
-		item['path'] = item['path'].replace('.jpg', '.thumb.png')
+		item['path'] = item['path'].replace('.jpg', '.thumb.jpg')
 	    if os.path.isdir(folder+f):
-		for name in glob.glob(folder+f+'/*.thumb.png'):
+		for name in sorted(glob.glob(folder+f+'/*.thumb.jpg')):
 		    item['thumb'] = ntpath.basename(name)
 		    item['path'] = subfolder + f + '/' + item['thumb']
 		    break
 		if not 'path' in item:
-		    for name in glob.glob(folder+f+'/*.jpg'):
+		    for name in sorted(glob.glob(folder+f+'/*.jpg')):
 			item['thumb'] = ntpath.basename(name)
 			item['path'] = subfolder + f + '/' + item['thumb']
 		        break
