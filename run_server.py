@@ -103,6 +103,10 @@ def inject_user():
 	footer_url=_footer_url,
 	footer_year=_footer_year
     )
-    
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
 if __name__ == "__main__":
     app.run(host=_host, port=int(_port), debug=_debug)
