@@ -4,7 +4,7 @@ from os import listdir
 import glob
 import ntpath
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_from_directory
 from flask.ext.babel import Babel, gettext, ngettext
 
 app = Flask(__name__)
@@ -107,6 +107,13 @@ def inject_user():
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
+
+@app.route('/favicon.ico')
+@app.route('/humans.txt')
+@app.route('/robots.txt')
+@app.route('/sitemap.xml')
+def static_from_root():
+    return send_from_directory(app.static_folder, request.path[1:])
 
 if __name__ == "__main__":
     app.run(host=_host, port=int(_port), debug=_debug)
